@@ -14,12 +14,14 @@ namespace SportsStore.WebUI.HtmlHelpers
             {
                 var tag = new TagBuilder("a");
                 tag.MergeAttribute("href", pageUrl(i));
+                // ReSharper disable SpecifyACultureInStringConversionExplicitly
                 tag.InnerHtml = i.ToString();
+                // ReSharper restore SpecifyACultureInStringConversionExplicitly
                 if (i == pagingInfo.CurrentPage)
                 {
                     tag.AddCssClass("selected");
                 }
-                result.Append(tag.ToString());
+                result.Append(tag);
             }
             return MvcHtmlString.Create(result.ToString());
         }
