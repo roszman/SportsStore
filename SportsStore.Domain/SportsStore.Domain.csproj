@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Abstract\IProductRepository.cs" />
     <Compile Include="Concrete\Configuration.cs" />
-    <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Concrete\Context.cs" />
     <Compile Include="Concrete\EFProductRepository.cs" />
     <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Product.cs" />
