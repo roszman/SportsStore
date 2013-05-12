@@ -11,5 +11,10 @@ namespace SportsStore.Domain.Concrete
     public class EFDbContext : DbContext
     {
         public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<EFDbContext, Configuration>());
+        }
     }
 }
