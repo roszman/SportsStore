@@ -41,11 +41,11 @@ namespace SportsStore.WebUI.Controllers
         
         public RedirectToRouteResult RemoveFromCart(Cart cart, int productId, string returnUrl)
         {
-            var product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            var line = cart.Lines.FirstOrDefault(l => l.Product.ProductID == productId);
 
-            if (product != null)
+            if (line != null)
             {
-                cart.RemoveLine(product);
+                cart.RemoveLine(line.Product);
             }
 
             return RedirectToAction("Index", new { returnUrl });
