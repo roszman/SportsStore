@@ -8,13 +8,13 @@ using SportsStore.Domain.Entities;
 
 namespace SportsStore.Domain.Concrete
 {
-    public class EFDbContext : DbContext
+    public class Context : DbContext
     {
         public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<EFDbContext, SportsStore.Domain.Concrete.Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<Context, SportsStore.Domain.Concrete.Configuration>());
         }
     }
 }

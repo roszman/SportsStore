@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SportsStore.Domain.Concrete
 {
-    public class Configuration : DbMigrationsConfiguration<EFDbContext>
+    public class Configuration : DbMigrationsConfiguration<Context>
     {
         public Configuration()
         {
