@@ -14,7 +14,7 @@ namespace SportsStore.Domain.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<EFDbContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<EFDbContext, SportsStore.Domain.Concrete.Configuration>());
         }
     }
 }
