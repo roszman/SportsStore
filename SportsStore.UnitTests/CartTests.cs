@@ -26,6 +26,7 @@ namespace SportsStore.UnitTests
         public void Can_Add_To_Cart()
         {
             //arrange
+            Mock<IOrderProcessor> proc = new Mock<IOrderProcessor>();
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns(new Product[]
                 {
@@ -33,7 +34,7 @@ namespace SportsStore.UnitTests
                 }.AsQueryable());
             Cart cart = new Cart();
 
-            CartController target = new CartController(mock.Object);
+            CartController target = new CartController(mock.Object, proc.Object);
 
             //act
             target.AddToCart(cart, 1, null);
@@ -48,6 +49,7 @@ namespace SportsStore.UnitTests
         public void Adding_Product_To_Cart_Goes_To_Cart_Screen()
         {
             //arrange
+            Mock<IOrderProcessor> proc = new Mock<IOrderProcessor>();
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns(new Product[]
                 {
@@ -55,7 +57,7 @@ namespace SportsStore.UnitTests
                 }.AsQueryable());
 
             Cart cart = new Cart();
-            CartController target = new CartController(mock.Object);
+            CartController target = new CartController(mock.Object, proc.Object);
 
             //act
             RedirectToRouteResult result = target.AddToCart(cart, 2, "myUrl");
@@ -70,7 +72,7 @@ namespace SportsStore.UnitTests
         {
             //arrange
             Cart cart = new Cart();
-            CartController target = new CartController(null);
+            CartController target = new CartController(null,null);
 
             //act
             CartIndexViewModel result = (CartIndexViewModel) target.Index(cart, "myUrl").ViewData.Model;
@@ -227,6 +229,61 @@ namespace SportsStore.UnitTests
 
             //assert
             Assert.AreEqual(target.Lines.Count(), 0);
+        }
+
+        [TestMethod]
+        public void Cannot_Checkout_Empty_Cart()
+        {
+            //arrange
+            Mock<IOrderProcessor> proc = new Mock<IOrderProcessor>();
+            Cart cart = new Cart();
+            ShippingDetails shippingDetails = new ShippingDetails();
+            CartController target = new CartController(null, proc.Object);
+
+            //act
+            ViewResult result = target.Checkout(cart, shippingDetails);
+            
+            //assert
+            proc.Verify(m => m.ProcessOrder(It.IsAny<Cart>(), It.IsAny<ShippingDetails>()), Times.Never());
+            Assert.AreEqual("", result.ViewName);
+            Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
+        }
+
+        [TestMethod]
+        public void Cannot_Checkout_Invalid_ShippingDetails()
+        {
+            //arrange
+            Mock<IOrderProcessor> mock = new Mock<IOrderProcessor>();
+            Cart cart = new Cart();
+            cart.AddItem(new Product(), 1);
+            CartController target = new CartController(null, mock.Object);
+            target.ModelState.AddModelError("error", "error");
+
+            //act
+            ViewResult result = target.Checkout(cart, new ShippingDetails());
+
+            //assert
+            mock.Verify(m => m.ProcessOrder(It.IsAny<Cart>(), It.IsAny<ShippingDetails>()), Times.Never());
+            Assert.AreEqual("", result.ViewName);
+            Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
+        }
+
+        [TestMethod]
+        public void Can_Checkout_And_Submit_Order()
+        {
+            //arrange
+            Mock<IOrderProcessor> mock = new Mock<IOrderProcessor>();
+            Cart cart = new Cart();
+            cart.AddItem(new Product(), 1);
+            CartController target = new CartController(null, mock.Object);
+
+            //act
+            ViewResult result = target.Checkout(cart, new ShippingDetails());
+           
+            //assert 
+            mock.Verify(m => m.ProcessOrder(It.IsAny<Cart>(), It.IsAny<ShippingDetails>()), Times.Once());
+            Assert.AreEqual("Completed", result.ViewName);
+            Assert.AreEqual(true, result.ViewData.ModelState.IsValid);
         }
     }
 }

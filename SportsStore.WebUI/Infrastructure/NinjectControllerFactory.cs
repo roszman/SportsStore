@@ -35,6 +35,7 @@ namespace SportsStore.WebUI.Infrastructure
             //    }.AsQueryable());
 
             _ninjectKernel.Bind<IProductRepository>().To<EFProductRepository>();
+            _ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcssor>();            
         }
 
         protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
