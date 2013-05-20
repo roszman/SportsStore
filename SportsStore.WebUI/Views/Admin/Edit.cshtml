@@ -1,12 +1,12 @@
 ﻿@model SportsStore.Domain.Entities.Product
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Admin: Edit " + @Model.Name;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h2>Edit @Model.Name</h2>
-@using (Html.BeginForm()) { 
+@using (Html.BeginForm("Edit", "Admin")) { 
     @Html.EditorForModel()
     <input type="submit" value="Save" />
     @Html.ActionLink("Cancel and return to list", "Index")
