@@ -8,6 +8,8 @@ using Ninject;
 using SportsStore.Domain.Entities;
 using SportsStore.Domain.Abstract;
 using SportsStore.Domain.Concrete;
+using SportsStore.WebUI.Infrastructure.Abstract;
+using SportsStore.WebUI.Infrastructure.Concrete;
 
 namespace SportsStore.WebUI.Infrastructure
 {
@@ -35,7 +37,8 @@ namespace SportsStore.WebUI.Infrastructure
             //    }.AsQueryable());
 
             _ninjectKernel.Bind<IProductRepository>().To<EFProductRepository>();
-            _ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcssor>();            
+            _ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcssor>();
+            _ninjectKernel.Bind<IAuthProvider>().To<FormsAuthProvider>();
         }
 
         protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
